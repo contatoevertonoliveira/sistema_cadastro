@@ -15,7 +15,7 @@
     <nav>
         <ul>
             <li><a href="index.php">Inicio</a></li>
-            <li><a href="#">Entrar</a></li>
+            <li><a href="entrar.php">Entrar</a></li>
         </ul>
     </nav>
 
@@ -41,7 +41,7 @@
             <h2>Deixe seu comentário:</h2>
             <form method="POST">
                 <img src="img/usericon.png" alt="">
-                <textarea name="texto" placeholder="Participe da discussão"></textarea>
+                <textarea name="texto" placeholder="Participe da discussão" maxlength="400"></textarea>
                 <input type="submit" value="Publicar Comentário">
             </form>
 

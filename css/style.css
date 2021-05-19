@@ -1,3 +1,6 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Della+Respira&display=swap');
+
 *{
     padding:0px;
     margin:0px;
@@ -41,4 +44,13 @@ li a:hover{
     border-bottom: 1px solid white;
     padding-bottom: 5px;
     border-color: #ffa500;
+}
+
+/*------------- saudação ----------------- */
+
+h2{
+    font-family: 'Della Respira', serif;
+    font-size: 35pt;
+    padding: 50px;
+    font-weight: normal;
 }
