@@ -1,3 +1,17 @@
+<?php
+
+require_once 'classes/usuarios.php';
+
+session_start();
+require_once 'verifica.php';
+
+require_once 'classes/classe_comentarios.php';
+$c = new Comentario("projeto_comentarios","localhost:3312","root","");
+$coments = $c->buscarComentarios();
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,10 +27,35 @@
 
 
     <nav>
+        <a href="index.php"><span>techTon</span></a>
         <ul>
             <li><a href="index.php">Inicio</a></li>
-            <li><a href="entrar.php">Entrar</a></li>
+                <?php
+                    if(isset($_SESSION['id_master']))
+                    { ?>
+                        <li><a href="dados.php">Dados</a></li>
+                    <?php } 
+
+                    if(isset($_SESSION['id_usuario']) || isset($_SESSION['id_master']))
+                    { ?>
+                        <li><a href="sair.php">Sair</a></li>
+                    <?php }else
+                    { ?>
+                        <li><a href="entrar.php">Entrar</a></li>
+                    <?php } ?>
         </ul>
+
+        <?php
+        if(isset($_SESSION['id_master']) || isset($_SESSION['id_usuario']))
+        { ?>
+            <h2 class="login">
+                <?php echo "Olá ";
+                echo $informacoes['nome'];
+                echo ", seja bem vindo(a)!";
+                ?>
+            </h2>
+        <?php } ?>
+
     </nav>
 
     <div id="largura-pagina">
@@ -36,49 +75,65 @@
             <p class="texto">3. Lorem Ipsum é que ele tem uma distribuição</p>
             <p class="texto">4. Letras mais ou menos normal</p>
 
+            <?php
 
+                if(!isset($_SESSION['id_usuario']))
+                { ?>
+                    <h2>Comentários:</h2>
+<?php           }else
+                { ?>
+                    <h2>Deixe seus Comentários:</h2>
+<?php           }
 
-            <h2>Deixe seu comentário:</h2>
-            <form method="POST">
-                <img src="img/usericon.png" alt="">
-                <textarea name="texto" placeholder="Participe da discussão" maxlength="400"></textarea>
-                <input type="submit" value="Publicar Comentário">
-            </form>
+?>
 
-            <div class="area-comentario">
-                <img src="img/usericon.png" alt="">
-                <h3>Nome da Pessoa 1</h3>
-                <h4>Horário e Data <a href="#">Excluir</a></h4>
-                <p>Comentário desta pessoa</p>
-            </div>
+            
+            <?php
+                if(isset($_SESSION['id_usuario']))
+                { ?>
+                    <form method="POST">
+                        <img src="img/usericon.png" alt="">
+                        <textarea name="texto" placeholder="Participe da discussão" maxlength="400"></textarea>
+                        <input type="submit" value="Publicar Comentário">
+                    </form>
 
-            <div class="area-comentario">
-                <img src="img/usericon.png" alt="">
-                <h3>Nome da Pessoa 2</h3>
-                <h4>Horário e Data <a href="#">Excluir</a></h4>
-                <p>Comentário desta pessoa</p>
-            </div>
+<?php           }
+            ?>
 
-            <div class="area-comentario">
-                <img src="img/usericon.png" alt="">
-                <h3>Nome da Pessoa 3</h3>
-                <h4>Horário e Data <a href="#">Excluir</a></h4>
-                <p>Comentário desta pessoa</p>
-            </div>
-
-            <div class="area-comentario">
-                <img src="img/usericon.png" alt="">
-                <h3>Nome da Pessoa 4</h3>
-                <h4>Horário e Data <a href="#">Excluir</a></h4>
-                <p>Comentário desta pessoa</p>
-            </div>
-
-            <div class="area-comentario">
-                <img src="img/usericon.png" alt="">
-                <h3>Nome da Pessoa 5</h3>
-                <h4>Horário e Data <a href="#">Excluir</a></h4>
-                <p>Comentário desta pessoa</p>
-            </div>
+            <?php 
+                if(count($coments) > 0)
+                {
+                    foreach($coments as $v)
+                    { ?>
+                        <div class="area-comentario">
+                        <img src="img/usericon.png" alt="">
+                        <h3><?php echo $v['nome_pessoa'] ?></h3>
+                        <h4><?php 
+                                $data = new DateTime($v['dia']);
+                                 echo $data->format('d/m/Y');
+                                 echo " - ";
+                                 echo $v['horario'];
+                            ?> 
+                        <?php
+                            if(isset($_SESSION['id_usuario']))
+                            {
+                                if($_SESSION['id_usuario'] == $v['fk_id_user'])
+                                { ?>
+                                    <a href="discussao.php?id_exc=<?php echo $v['id']; ?>"> | Excluir</a></h4>
+                                <?php }
+                            }elseif (isset($_SESSION['id_master']))
+                            { ?>
+                                <a href="discussao.php?id_exc=<?php echo $v['id']; ?>"> | Excluir</a></h4>
+                            <?php }
+                        ?>
+                        <p><?php echo $v['comentarios'] ?></p>
+                        </div>
+                    <?php }
+                }else
+                {
+                    echo "Ainda não há comentários por aqui!";
+                }
+            ?>
 
         </section>
 
@@ -108,3 +163,38 @@
 </body>
 
 </html>
+
+
+
+<?php
+    if(isset($_GET['id_exc']))
+    {
+        $id_e = addslashes($_GET['id_exc']);
+        if(isset($_SESSION['id_master']))
+        {
+            $c->excluirComentario($id_e, $_SESSION['id_master']);
+        }elseif (isset($_SESSION['id_usuario']))
+        {
+            $c->excluirComentario($id_e, $_SESSION['id_usuario']);
+        }
+        header("location:discussao.php");
+    }
+?>
+
+<?php
+
+    if(isset($_POST['texto']))
+    {
+        $texto = addslashes($_POST['texto']);
+
+        if(isset($_SESSION['id_master']))
+        {
+            $c->inserirComentario($_SESSION['id_master'], $texto);
+        }elseif (isset($_SESSION['id_usuario']))
+        {
+            $c->inserirComentario($_SESSION['id_usuario'], $texto);
+        }
+            header("location:discussao.php");
+    }
+
+?>

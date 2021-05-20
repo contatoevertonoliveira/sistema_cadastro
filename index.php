@@ -3,15 +3,9 @@
 require_once 'classes/usuarios.php';
 
 session_start();
-if(isset($_SESSION['id_usuario']))
-{
-    $us = new Usuario("projeto_comentarios","localhost:3312","root","");
-    $informacoes = $us->buscarDadosUser($_SESSION['id_usuario']);
-}elseif(isset($_SESSION['id_master']))
-{
-    $us = new Usuario("projeto_comentarios","localhost:3312","root","");
-    $informacoes = $us->buscarDadosUser($_SESSION['id_master']);
-}
+
+require_once 'verifica.php';
+
 
 ?>
 
@@ -30,6 +24,9 @@ if(isset($_SESSION['id_usuario']))
 <body>
 
     <nav>
+        <a href="index.php"><span class="logo">techTon</span></a>
+
+
         <ul>
             <?php
                 if(isset($_SESSION['id_master']))
@@ -46,14 +43,10 @@ if(isset($_SESSION['id_usuario']))
                 { ?>
                     <li><a href="entrar.php">Entrar</a></li>
                 <?php }
-                ?>
-            
+                ?>    
         </ul>
-    </nav>
 
-    
-
-    <?php
+        <?php
         if(isset($_SESSION['id_master']) || isset($_SESSION['id_usuario']))
         { ?>
             <h2>
@@ -62,9 +55,21 @@ if(isset($_SESSION['id_usuario']))
                 echo ", seja bem vindo(a)!";
                 ?>
             </h2>
-    <?php } ?>
+        <?php } ?>
 
-    <h3>CONTEÚDO QUALQUER</h3>
+    </nav>
+
+    <h3>Sejam bem vindos. Escolha sua opção abaixo:</h3>
+
+    <section>
+        <div class="container">
+            <div class="card"><a class="links" href="#"><span class="textContent">Entrar</span></a></div>
+            <div class="card"><a class="links" href="#"><span class="textContent">Discussão</span></a></div>
+            <div class="card"><a class="links" href="#"><span class="textContent">Cadastro</span></a></div>  
+        </div>
+    </section>
+
+    
 </body>
 
 </html>

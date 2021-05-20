@@ -1,3 +1,7 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Della+Respira&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,800&display=swap');
+
 *{
     padding:0px;
     margin:0px;
@@ -11,8 +15,24 @@ body{
 /* -------- MENU ------------ */
 
 nav{
-    background-color: rgba(123,104,238);
+    background-color: rgb(59, 156, 3);
     height: 60px;
+}
+
+
+a{
+    text-decoration: none;
+}
+
+span{
+    text-align: left;
+    color: #ffa500;
+    font-size: 30px;
+    font-family: 'Playfair Display', serif;
+    text-shadow: 1px 1px 3px gray;
+    line-height: 60px;
+    margin-left: 100px;
+
 }
 
 ul{
@@ -59,4 +79,14 @@ tr{
 
 td{
     border: 1px solid black;
+}
+
+h2{
+    font-family: 'Della Respira', serif;
+    font-size: 12pt;
+    font-weight: normal;
+    line-height: 60px;
+    float: right;
+    margin-right: 30px;
+    color: greenyellow;
 }
